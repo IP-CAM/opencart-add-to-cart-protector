@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<modification>
+  <generator>Created with OpenIX - https://openix.io/en/tool/opencart/vqmod</generator>
+  <id>add_to_cart_protector</id>
+  <version>1</version>
+  <vqmver>2.4</vqmver>
+  <author>Muhammed Furkan Yılmaz</author>
+
+  <file path="catalog/controller/checkout/" name="cart.php">
+    <operation info="Cart PHP Edit">
+      <search position="after"><![CDATA[$product_info = $this->model_catalog_product->getProduct($product_id);]]></search>
+      <ignoreif><![CDATA[		if($this->request->post['quantity']>$product_info['quantity']){
+			$json['error']=$this->language->get('error_stock');
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		} ]]></ignoreif>
+      <add><![CDATA[		if($this->request->post['quantity']>$product_info['quantity']){
+			$json['error']=$this->language->get('error_stock');
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		} ]]></add>
+    </operation>
+
+  </file>
+
+  <file path="catalog/view/theme/*/template/product/" name="product.*">
+    <operation info="jquery edit">
+      <search position="after"><![CDATA[if (json['error']) {]]></search>
+      <ignoreif><![CDATA[        	$('#button-cart').after('<div id="quantity-alert" class="alert-danger text-center">' + json['error'] + '</div>'); 
+          $('#button-cart').removeClass('btn-primary');
+          $('#button-cart').addClass('btn-danger');
+          setTimeout(
+          function() 
+          {
+            $('#button-cart').removeClass('btn-danger');
+            $('#button-cart').addClass('btn-primary');
+            $('#quantity-alert').remove();
+          }, 3000);]]></ignoreif>
+      <add><![CDATA[        	$('#button-cart').after('<div id="quantity-alert" class="alert-danger text-center">' + json['error'] + '</div>'); 
+          $('#button-cart').removeClass('btn-primary');
+          $('#button-cart').addClass('btn-danger');
+          setTimeout(
+          function() 
+          {
+            $('#button-cart').removeClass('btn-danger');
+            $('#button-cart').addClass('btn-primary');
+            $('#quantity-alert').remove();
+          }, 3000);]]></add>
+    </operation>
+
+  </file>
+</modification>
